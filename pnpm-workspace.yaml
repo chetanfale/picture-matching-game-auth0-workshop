@@ -1,0 +1,4 @@
+packages:
+  # List of packages that are part of the workspace
+  - "app"
+  - "final-app"

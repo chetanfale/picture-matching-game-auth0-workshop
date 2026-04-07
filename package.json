@@ -1,0 +1,18 @@
+{
+  "name": "picture-matching-game-auth0-workshop-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Workspace root for the Auth0 AI Agent workshop.",
+  "scripts": {
+    "dev:app": "pnpm --filter app dev",
+    "dev:final": "pnpm --filter final-app dev",
+    "setup-auth0": "pnpm --filter app run setup-auth0"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "pnpm": ">=8.0.0"
+  }
+}

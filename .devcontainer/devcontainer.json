@@ -1,0 +1,27 @@
+{
+  "name": "Auth0 Token Vault Workshop",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:18-bullseye",
+
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/auth0-cli:1": {}
+  },
+
+  "forwardPorts": [3000],
+
+  // This command runs after the container is created and features are installed
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  "customizations": {
+    "vscode": {
+      // This is the correct location for VS Code specific settings
+      "settings": {
+        "corepack.enable": true
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  }
+}
