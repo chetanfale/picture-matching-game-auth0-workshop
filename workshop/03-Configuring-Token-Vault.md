@@ -6,31 +6,45 @@ Time to get hands-on! In this module, you'll set up the Auth0 side of Token Vaul
 
 ## 💡 Learning Objectives
 
-- Create a Google social connection in Auth0 via the CLI
+- Update an existing Google social connection in Auth0 via the CLI
 - Understand OAuth scopes and refresh tokens
 - Enable the connect endpoint in your Auth0 SDK configuration
 - Add the required scopes for Token Vault and Google Drive
 
 ---
 
-## Part A: Create the Google Social Connection
+## Part A: Update the Google Social Connection
 
-Right now, Auth0 knows about your app, but it doesn't know anything about Google. We need to create a **social connection** that tells Auth0:
+You may have noticed that you could log in with Google back in Module 01. That's because new Auth0 tenants come with a **default `google-oauth2` connection** that uses Auth0's built-in development keys. This is convenient for getting started, but those development keys only provide basic profile and email access.
 
-1. How to talk to Google's OAuth servers
-2. What permissions (scopes) to request
-3. To store the resulting tokens in Token Vault
+For Token Vault to work, we need to **update** this existing connection to:
 
-### 🧑‍💻 Exercise: Create the Connection via CLI
+1. Use dedicated Google OAuth credentials (with access to the Google Drive API)
+2. Request the `drive.readonly` scope so our app can read images
+3. Enable `offline` access so Auth0 can store and refresh tokens automatically
 
-Run this command in your terminal:
+> **Note**
+> To save time, this workshop uses a shared Google Client ID and Secret that are pre-provisioned via Codespaces secrets. In a production app, you'd create your own Google OAuth credentials. See the [Auth0 Token Vault Google integration guide](https://auth0.com/ai/docs/integrations/google) for instructions on setting that up.
+
+### 🧑‍💻 Exercise: Update the Connection via CLI
+
+This is a two-step process: first we'll look up the existing connection's ID, then we'll update it with the new configuration.
+
+**Step 1 — Get the connection ID:**
 
 ```bash
-auth0 api POST /api/v2/connections \
+CONNECTION_ID=$(auth0 api GET /api/v2/connections \
+  --query "name=google-oauth2&strategy=google-oauth2" | jq -r '.[0].id')
+echo $CONNECTION_ID
+```
+
+You should see a connection ID like `con_aBcDeFgHiJkLmNoP`. This is the unique identifier for the default Google connection on your tenant.
+
+**Step 2 — Update the connection:**
+
+```bash
+auth0 api PATCH /api/v2/connections/$CONNECTION_ID \
   --data '{
-    "name": "google-oauth2",
-    "strategy": "google-oauth2",
-    "enabled_clients": ["'"$(grep AUTH0_CLIENT_ID app/.env.local | cut -d'=' -f2 | tr -d "'")"'"],
     "options": {
       "client_id": "'"$GOOGLE_CLIENT_ID"'",
       "client_secret": "'"$GOOGLE_CLIENT_SECRET"'",
@@ -41,23 +55,17 @@ auth0 api POST /api/v2/connections \
   }'
 ```
 
-You should see a JSON response with the connection details, including a `"name": "google-oauth2"` field.
-
-> **Note**
-> If you get an error like `"Connection with name google-oauth2 already exists"`, you can skip this step — the connection is already configured.
+You should see a JSON response with the updated connection details.
 
 ### ℹ️ What Each Field Does
 
 | Field | Value | Purpose |
 |-------|-------|---------|
-| `name` | `"google-oauth2"` | Identifier for this connection — used later in code |
-| `strategy` | `"google-oauth2"` | Tells Auth0 this is a Google OAuth connection |
-| `enabled_clients` | Your app's Client ID | Links this connection to your Auth0 app |
-| `options.client_id` | Your Google Client ID | Google's identifier for your OAuth app |
-| `options.client_secret` | Your Google Client Secret | Google's secret for your OAuth app |
-| `options.scope` | profile, email, drive.readonly | Permissions requested from Google |
+| `options.client_id` | Workshop Google Client ID | Replaces Auth0's dev keys with dedicated credentials |
+| `options.client_secret` | Workshop Google Client Secret | Paired secret for the Google OAuth app |
+| `options.scope` | profile, email, drive.readonly | Adds Google Drive read access to the existing scopes |
 | `options.access_type` | `"offline"` | Requests a refresh token for long-lived access |
-| `options.prompt` | `"consent"` | Always show consent screen (useful for testing) |
+| `options.prompt` | `"consent"` | Always show consent screen (ensures refresh token is issued) |
 
 ### ✅ Verify the Connection
 
@@ -65,7 +73,7 @@ You should see a JSON response with the connection details, including a `"name":
 auth0 api GET /api/v2/connections --query "name=google-oauth2"
 ```
 
-You should see your connection in the output with the correct scopes.
+You should see your connection in the output with the updated scopes, including `https://www.googleapis.com/auth/drive.readonly`.
 
 ---
 
@@ -77,7 +85,7 @@ You can also see the connection visually:
 2. Navigate to **Authentication > Social**
 3. You should see **Google / Gmail** in the list
 4. Click on it and verify:
-   - Client ID is set
+   - Client ID is set (no longer using Auth0's dev keys)
    - Scopes include `https://www.googleapis.com/auth/drive.readonly`
    - The connection is enabled for your app
 
@@ -219,7 +227,7 @@ The app should still work exactly the same — these configuration changes don't
 
 ## ✅ Checkpoint
 
-- [ ] Google social connection created in Auth0 (verified via CLI or Dashboard)
+- [ ] Google social connection updated in Auth0 with proper credentials and scopes (verified via CLI or Dashboard)
 - [ ] `enableConnectAccountEndpoint: true` added to Auth0 client config
 - [ ] Scopes updated to include `offline_access` and Google Drive scope
 - [ ] App still starts and runs without errors
