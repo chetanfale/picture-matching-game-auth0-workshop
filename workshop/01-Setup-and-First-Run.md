@@ -1,4 +1,4 @@
-# Part 1: Setup and First Run
+# Module 01: Setup and First Run
 
 In this module, you'll launch your development environment, configure Auth0, and play the picture-matching game for the first time — all with default images. By the end, you'll have a running app and know exactly where the Token Vault integration points are.
 

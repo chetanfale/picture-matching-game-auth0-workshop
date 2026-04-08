@@ -1,4 +1,4 @@
-# Part 2: The Challenge of AI Access
+# Module 02: The Challenge of AI Access
 
 Before we start writing code, let's understand the problem we're solving. Why can't we just pass a Google API key to our app and call it a day?
 

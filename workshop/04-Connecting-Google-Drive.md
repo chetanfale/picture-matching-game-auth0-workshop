@@ -1,4 +1,4 @@
-# Part 4: Connecting Google Drive
+# Module 04: Connecting Google Drive
 
 Now that Token Vault is configured on the Auth0 side, it's time to write the code that actually *uses* it. In this module, you'll implement token retrieval in three places — two API routes and the settings page.
 
@@ -34,7 +34,7 @@ Open `app/app/api/google-drive/route.ts`. This API route handles listing images 
 ```typescript
 export async function GET(request: NextRequest) {
   try {
-    // TODO (Part 4, Step 1): Retrieve the Google OAuth token using Token Vault
+    // TODO (Module 04, Change 3): Retrieve the Google OAuth token using Token Vault
     // Use auth0.getAccessTokenForConnection() with connection: 'google-oauth2'
     const token = ''
 ```
@@ -95,7 +95,7 @@ Open `app/app/api/google-drive/file/[id]/route.ts`. This route proxies individua
   try {
     const { id } = await params
 
-    // TODO (Part 4, Step 2): Retrieve the Google OAuth token using Token Vault
+    // TODO (Module 04, Change 4): Retrieve the Google OAuth token using Token Vault
     // Use auth0.getAccessTokenForConnection() with connection: 'google-oauth2'
     const token = ''
 ```
@@ -155,7 +155,7 @@ Open `app/app/settings/page.tsx`. This server component checks whether the user 
 
 ```typescript
 async function isGoogleConnected() {
-  // TODO (Part 4, Step 3): Check if the user has connected their Google account via Token Vault
+  // TODO (Module 04, Change 5): Check if the user has connected their Google account via Token Vault
   // Use auth0.getAccessTokenForConnection() to verify the connection exists
   return false
 }

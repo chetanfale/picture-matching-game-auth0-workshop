@@ -2,7 +2,7 @@ import { auth0 } from '@/lib/auth0'
 import { SettingsContent } from '@/components/settings-content'
 
 async function isGoogleConnected() {
-  // TODO (Part 4, Step 3): Check if the user has connected their Google account via Token Vault
+  // TODO (Module 04, Change 5): Check if the user has connected their Google account via Token Vault
   // Use auth0.getAccessTokenForConnection() to verify the connection exists
   return false
 }

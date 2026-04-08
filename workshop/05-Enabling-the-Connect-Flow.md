@@ -1,4 +1,4 @@
-# Part 5: Enabling the Connect Flow
+# Module 05: Enabling the Connect Flow
 
 This is the moment everything comes together! You'll enable the "Connect Google Drive" button in the UI, test the full OAuth connection flow, and play the game with your own photos.
 
@@ -18,7 +18,7 @@ This is the moment everything comes together! You'll enable the "Connect Google 
 Open `app/components/settings-content.tsx`. Scroll down to around line 109 where you'll see the commented-out connect link and the placeholder:
 
 ```tsx
-{/* TODO (Part 5, Step 1): Uncomment the link below and delete the placeholder div */}
+{/* TODO (Module 05, Change 6): Uncomment the link below and delete the placeholder div */}
 {/* <a
   href="/auth/connect?connection=google-oauth2&returnTo=/settings"
   className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"

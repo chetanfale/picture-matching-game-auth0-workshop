@@ -1,4 +1,4 @@
-# Part 6: Recap and Next Steps
+# Module 06: Recap and Next Steps
 
 Congratulations! You've completed the workshop. Let's recap what you built and explore where to go from here.
 

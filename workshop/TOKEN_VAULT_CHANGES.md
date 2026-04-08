@@ -11,7 +11,7 @@
 
 **Starter code:**
 ```typescript
-// TODO (Step X): Enable the connect endpoint for Token Vault
+// TODO (Module 03, Change 1): Enable the connect endpoint for Token Vault
 ```
 
 **Final code:**
@@ -29,7 +29,7 @@ enableConnectAccountEndpoint: true,
 
 **Starter code:**
 ```typescript
-// TODO (Step X): Add the offline_access and Google Drive scopes
+// TODO (Module 03, Change 2): Add the offline_access and Google Drive scopes
 scope: "openid profile email",
 ```
 
@@ -48,7 +48,7 @@ scope: "openid profile email offline_access https://www.googleapis.com/auth/driv
 
 **Starter code:**
 ```typescript
-// TODO (Step X): Retrieve the Google OAuth token using Token Vault
+// TODO (Module 04, Change 3): Retrieve the Google OAuth token using Token Vault
 // Use auth0.getAccessTokenForConnection() with connection: 'google-oauth2'
 const token = ''
 ```
@@ -70,7 +70,7 @@ const { token } = await auth0.getAccessTokenForConnection({
 
 **Starter code:**
 ```typescript
-// TODO (Step X): Retrieve the Google OAuth token using Token Vault
+// TODO (Module 04, Change 4): Retrieve the Google OAuth token using Token Vault
 // Use auth0.getAccessTokenForConnection() with connection: 'google-oauth2'
 const token = ''
 ```
@@ -92,7 +92,7 @@ const { token } = await auth0.getAccessTokenForConnection({
 
 **Starter code:**
 ```typescript
-// TODO (Step X): Check if the user has connected their Google account via Token Vault
+// TODO (Module 04, Change 5): Check if the user has connected their Google account via Token Vault
 // Use auth0.getAccessTokenForConnection() to verify the connection exists
 return false
 ```

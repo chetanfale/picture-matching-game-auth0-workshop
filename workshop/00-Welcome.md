@@ -1,4 +1,4 @@
-# Part 0: Welcome
+# Module 00: Welcome
 
 ![Workshop Banner Image](assets/banner.png)
 

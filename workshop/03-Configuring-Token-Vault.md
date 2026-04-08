@@ -1,4 +1,4 @@
-# Part 3: Configuring Token Vault
+# Module 03: Configuring Token Vault
 
 Time to get hands-on! In this module, you'll set up the Auth0 side of Token Vault using the CLI, then make two configuration changes in your app code to enable the connect endpoint and request the right scopes.
 
@@ -119,7 +119,7 @@ Open `app/lib/auth0.ts` in your editor. You'll see:
 
 ```typescript
 export const auth0 = new Auth0Client({
-  // TODO (Part 3, Step 1): Enable the connect endpoint for Token Vault
+  // TODO (Module 03, Change 1): Enable the connect endpoint for Token Vault
   authorizationParameters: {
 ```
 
@@ -153,7 +153,7 @@ Still in `app/lib/auth0.ts`, find the scope configuration:
 
 ```typescript
   authorizationParameters: {
-    // TODO (Part 3, Step 2): Add the offline_access and Google Drive scopes
+    // TODO (Module 03, Change 2): Add the offline_access and Google Drive scopes
     scope: "openid profile email",
   },
 ```

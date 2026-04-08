@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    // TODO (Part 4, Step 1): Retrieve the Google OAuth token using Token Vault
+    // TODO (Module 04, Change 3): Retrieve the Google OAuth token using Token Vault
     // Use auth0.getAccessTokenForConnection() with connection: 'google-oauth2'
     const token = ''
 
