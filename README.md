@@ -2,7 +2,7 @@
 
 ![Workshop Banner Image](workshop/assets/banner.png) <!-- Create a nice banner image later -->
 
-Welcome to the workshop! In the next 45 minutes, you will build a fun picture-matching game that uses an AI agent to securely access images from a user's Google Drive. We'll learn how to give an AI a key, not the kingdom, using Auth0's Token Vault.
+Ever wonder how AI agents can securely use your personal data without getting access to your entire digital life? In this hands-on workshop, we'll build a fun, picture-matching game powered by an AI agent. You'll learn how to use Auth0's Token Vault to grant the agent secure, temporary access to a specific folder in Google Drive, allowing users to play the game with their own photos.
 
 ---
 
@@ -39,12 +39,12 @@ Before you begin, please ensure you have the following:
 
 ## 📖 Workshop Structure
 
-This workshop is broken down into several modules, located in the `/workshop` directory.
+This workshop is broken down into seven modules, located in the `/workshop` directory. Each module builds on the previous one, taking you from setup through a fully working Token Vault integration.
 
-- `00-Welcome.md`: Introduction to the project and learning objectives.
-- `01-Setup-and-First-Run.md`: Running the starter app for the first time.
-- `02-The-Challenge-of-AI-Access.md`: Understanding the security problem we are solving.
-- `03-Setting-Up-Auth0.md`: Using the Auth0 CLI to configure your application.
-- `04-Implementing-Token-Vault.md`: Writing the code to connect Auth0 and Google Drive.
-- `05-Connecting-the-AI-Agent.md`: Integrating the AI agent to use the secure token.
-- `06-Recap-and-Next-Steps.md`: Reviewing what we built and where to go from here.
+- **[00-Welcome](workshop/00-Welcome.md)** — Introduction and learning objectives
+- **[01-Setup and First Run](workshop/01-Setup-and-First-Run.md)** — Spin up Codespace and play the game
+- **[02-The Challenge of AI Access](workshop/02-The-Challenge-of-AI-Access.md)** — Understand why Token Vault matters
+- **[03-Configuring Token Vault](workshop/03-Configuring-Token-Vault.md)** — Set up Auth0 and Google connection via CLI
+- **[04-Connecting Google Drive](workshop/04-Connecting-Google-Drive.md)** — Implement token retrieval in API routes
+- **[05-Enabling the Connect Flow](workshop/05-Enabling-the-Connect-Flow.md)** — Enable the UI and test end-to-end
+- **[06-Recap and Next Steps](workshop/06-Recap-and-Next-Steps.md)** — Review what you built and explore further

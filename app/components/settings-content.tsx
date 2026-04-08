@@ -106,7 +106,7 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              {/* TODO (Step X): Uncomment the link below and delete the placeholder div */}
+              {/* TODO (Part 5, Step 1): Uncomment the link below and delete the placeholder div */}
               {/* <a
                 href="/auth/connect?connection=google-oauth2&returnTo=/settings"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"

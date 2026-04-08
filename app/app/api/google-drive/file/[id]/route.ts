@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { id } = await params
     
-    // TODO (Step X): Retrieve the Google OAuth token using Token Vault
+    // TODO (Part 4, Step 2): Retrieve the Google OAuth token using Token Vault
     // Use auth0.getAccessTokenForConnection() with connection: 'google-oauth2'
     const token = ''
 
