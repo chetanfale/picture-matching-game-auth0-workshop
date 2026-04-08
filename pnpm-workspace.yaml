@@ -2,5 +2,8 @@ packages:
   # List of packages that are part of the workspace
   - "app"
   - "final-app"
+  - "email-collector"
 allowBuilds:
   sharp: true
+  esbuild: true
+  workerd: true

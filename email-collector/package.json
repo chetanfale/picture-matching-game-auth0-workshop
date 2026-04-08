@@ -1,0 +1,18 @@
+{
+  "name": "email-collector",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Collect participant Gmail addresses for Google Cloud Console test users",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "setup-auth0": "node scripts/setup-auth0.mjs"
+  },
+  "dependencies": {
+    "hono": "^4.7.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250327.0",
+    "wrangler": "^4.14.0"
+  }
+}

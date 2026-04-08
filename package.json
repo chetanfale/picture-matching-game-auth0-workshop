@@ -6,7 +6,10 @@
   "scripts": {
     "dev:app": "pnpm --filter app dev",
     "dev:final": "pnpm --filter final-app dev",
-    "setup-auth0": "pnpm --filter app run setup-auth0"
+    "dev:emails": "pnpm --filter email-collector dev",
+    "deploy:emails": "pnpm --filter email-collector run deploy",
+    "setup-auth0": "pnpm --filter app run setup-auth0",
+    "setup-auth0:emails": "pnpm --filter email-collector setup-auth0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
