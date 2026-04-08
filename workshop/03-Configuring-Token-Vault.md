@@ -50,7 +50,8 @@ auth0 api PATCH /api/v2/connections/$CONNECTION_ID \
       "client_secret": "'"$GOOGLE_CLIENT_SECRET"'",
       "scope": ["profile", "email", "https://www.googleapis.com/auth/drive.readonly"],
       "access_type": "offline",
-      "prompt": "consent"
+      "prompt": "consent",
+      "connected_accounts": { "active": true }
     }
   }'
 ```
@@ -66,6 +67,7 @@ You should see a JSON response with the updated connection details.
 | `options.scope` | profile, email, drive.readonly | Adds Google Drive read access to the existing scopes |
 | `options.access_type` | `"offline"` | Requests a refresh token for long-lived access |
 | `options.prompt` | `"consent"` | Always show consent screen (ensures refresh token is issued) |
+| `options.connected_accounts.active` | `true` | Enables Token Vault's connected accounts feature on this connection |
 
 ### ✅ Verify the Connection
 
@@ -106,6 +108,158 @@ We intentionally use `drive.readonly` instead of the full `drive` scope. This fo
 ### ℹ️ Why `access_type: "offline"`?
 
 Google access tokens expire after about 1 hour. Setting `access_type` to `"offline"` tells Google to also issue a **refresh token**. Auth0 stores both in Token Vault and automatically uses the refresh token to get new access tokens when they expire — so users don't need to re-authorize.
+
+---
+
+## Part A2: Configure Token Vault on Your Auth0 Tenant
+
+With the Google connection updated, we now need to configure several Auth0 resources that Token Vault depends on. These steps enable the token exchange flow that lets your app retrieve Google access tokens from Token Vault.
+
+> **Important**
+> Steps 3–6 below use shell variables (`$CLIENT_ID`, `$TENANT_DOMAIN`) defined in earlier steps. Run all of them in the **same terminal session** so the variables persist.
+
+### 🧑‍💻 Exercise: Step 3 — Enable the Token Vault Grant Type
+
+Your application needs the Token Vault grant type to exchange Auth0 tokens for external provider tokens. Without this, the SDK's `getAccessTokenForConnection()` call will fail.
+
+**Get your Client ID from the `.env.local` file:**
+
+```bash
+CLIENT_ID=$(grep AUTH0_CLIENT_ID app/.env.local | cut -d"'" -f2)
+echo $CLIENT_ID
+```
+
+**Enable the Token Vault grant type:**
+
+```bash
+auth0 api PATCH /api/v2/clients/$CLIENT_ID \
+  --data '{
+    "grant_types": [
+      "authorization_code",
+      "refresh_token",
+      "urn:auth0:params:oauth:grant-type:token-exchange:federated-connection-access-token"
+    ]
+  }'
+```
+
+> **ℹ️ What is this grant type?**
+> The `urn:auth0:params:oauth:grant-type:token-exchange:federated-connection-access-token` grant type is what enables Token Vault's token exchange flow. When your app calls `getAccessTokenForConnection("google-oauth2")`, the SDK uses this grant type behind the scenes to exchange the user's Auth0 session for a Google access token stored in Token Vault.
+
+<details>
+<summary>🖥️ Dashboard verification</summary>
+
+1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
+2. Navigate to **Applications > Applications > [Your App] > Settings**
+3. Scroll to **Advanced Settings > Grant Types**
+4. Confirm **Token Vault** is checked
+
+</details>
+
+---
+
+### 🧑‍💻 Exercise: Step 4 — Activate the My Account API
+
+Token Vault uses Auth0's **My Account API** to manage connected accounts. This API provides endpoints for creating, reading, and deleting connected account links between your users and external providers.
+
+```bash
+TENANT_DOMAIN=$(auth0 tenants domain)
+
+auth0 api POST /api/v2/resource-servers \
+  --data '{
+    "identifier": "https://'"$TENANT_DOMAIN"'/me/",
+    "name": "Auth0 My Account",
+    "scopes": [
+      { "value": "create:me:connected_accounts" },
+      { "value": "read:me:connected_accounts" },
+      { "value": "delete:me:connected_accounts" }
+    ],
+    "allow_offline_access": true,
+    "skip_consent_for_verifiable_first_party_clients": true
+  }'
+```
+
+> **Note**
+> If you see a `409 Conflict` error, the My Account API already exists on your tenant — that's fine, proceed to Step 5.
+
+<details>
+<summary>🖥️ Dashboard verification</summary>
+
+1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
+2. Navigate to **Applications > APIs**
+3. Confirm **Auth0 My Account** exists with the connected accounts scopes
+
+</details>
+
+---
+
+### 🧑‍💻 Exercise: Step 5 — Create a Client Grant for Connected Accounts
+
+Now we need to **authorize** your application to use the My Account API. A client grant links your app to the API and specifies which scopes it can request.
+
+```bash
+auth0 api POST /api/v2/client-grants \
+  --data '{
+    "client_id": "'"$CLIENT_ID"'",
+    "audience": "https://'"$TENANT_DOMAIN"'/me/",
+    "scope": [
+      "create:me:connected_accounts",
+      "read:me:connected_accounts",
+      "delete:me:connected_accounts"
+    ]
+  }'
+```
+
+> **ℹ️ What do these scopes do?**
+>
+> | Scope | Purpose |
+> |-------|---------|
+> | `create:me:connected_accounts` | Link a new external provider (e.g., Google) to a user's account |
+> | `read:me:connected_accounts` | Check if a user has connected an external provider |
+> | `delete:me:connected_accounts` | Remove an external provider connection |
+
+<details>
+<summary>🖥️ Dashboard verification</summary>
+
+1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
+2. Navigate to **Applications > APIs > Auth0 My Account > Application Access**
+3. Confirm your app is listed and authorized with the connected accounts scopes
+
+</details>
+
+---
+
+### 🧑‍💻 Exercise: Step 6 — Configure Multi-Resource Refresh Token (MRRT) Policy
+
+Finally, we need to configure a **Multi-Resource Refresh Token** policy. This allows a single refresh token to work across both your app and the My Account API, which is required for Token Vault to seamlessly retrieve external provider tokens.
+
+```bash
+auth0 api PATCH /api/v2/clients/$CLIENT_ID \
+  --data '{
+    "refresh_token": {
+      "policies": [{
+        "audience": "https://'"$TENANT_DOMAIN"'/me/",
+        "scopes": [
+          "create:me:connected_accounts",
+          "read:me:connected_accounts",
+          "delete:me:connected_accounts"
+        ]
+      }]
+    }
+  }'
+```
+
+> **ℹ️ Why is MRRT needed?**
+> Without MRRT, your app would need separate refresh tokens for its own API and the My Account API. MRRT lets a single refresh token (obtained when the user logs in with `offline_access`) also request tokens scoped to the My Account API — which is how Token Vault manages connected accounts behind the scenes.
+
+<details>
+<summary>🖥️ Dashboard verification</summary>
+
+1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
+2. Navigate to **Applications > Applications > [Your App] > Settings**
+3. Scroll to **Multi-Resource Refresh Token**
+4. Confirm the **Auth0 My Account** API policy is configured
+
+</details>
 
 ---
 
@@ -227,7 +381,11 @@ The app should still work exactly the same — these configuration changes don't
 
 ## ✅ Checkpoint
 
-- [ ] Google social connection updated in Auth0 with proper credentials and scopes (verified via CLI or Dashboard)
+- [ ] Google social connection updated with credentials, scopes, and `connected_accounts.active` (verified via CLI or Dashboard)
+- [ ] Token Vault grant type enabled on the application
+- [ ] My Account API activated with connected accounts scopes
+- [ ] Client grant created linking the app to My Account API
+- [ ] MRRT policy configured on the application
 - [ ] `enableConnectAccountEndpoint: true` added to Auth0 client config
 - [ ] Scopes updated to include `offline_access` and Google Drive scope
 - [ ] App still starts and runs without errors

@@ -62,7 +62,7 @@ pnpm setup-auth0
 This will:
 
 1. **Open your browser** for Auth0 authentication — log in to the Auth0 tenant you want to use
-2. **Create a new SPA application** called "Auth0 Picture Matching Game Workshop App"
+2. **Create a new Regular Web Application** called "Auth0 Picture Matching Game Workshop App"
 3. **Configure callback URLs** for `http://localhost:3000`
 4. **Generate a secure secret** for session encryption
 5. **Write your `.env.local`** file with all the Auth0 credentials

@@ -55,14 +55,15 @@ async function main() {
   runCommand("auth0 login");
   console.log("✅ Authentication successful!");
 
-  // 3. Create the SPA Application
+  // 3. Create the Application
   console.log(`\nStep 2: Creating the '${appName}' application...`);
   // Using --no-input to avoid interactive prompts in the CLI, --json for easy parsing
   const appCreateOutput = runCommand(
-    `auth0 apps create "${appName}" --type spa --description "Workshop app for the picture matching game" --json --no-input`
+    `auth0 apps create "${appName}" --type regular --description "Workshop app for the picture matching game" --json --no-input`
   );
   const appData = JSON.parse(appCreateOutput);
   const clientId = appData.client_id;
+  const clientSecret = appData.client_secret;
   console.log(`✅ Application created with Client ID: ${clientId}`);
 
   // 4. Configure URLs
@@ -115,7 +116,7 @@ AUTH0_SECRET='${auth0Secret}'
 AUTH0_BASE_URL='${callbackUrl}'
 AUTH0_ISSUER_BASE_URL='${issuerBaseUrl}'
 AUTH0_CLIENT_ID='${clientId}'
-AUTH0_CLIENT_SECRET='' # Not strictly needed for SPAs, but good to include for consistency if a backend were used
+AUTH0_CLIENT_SECRET='${clientSecret}'
 
 # Google Credentials (provided via Codespaces secrets)
 GOOGLE_CLIENT_ID=${googleClientId || process.env.GOOGLE_CLIENT_ID || ""}
