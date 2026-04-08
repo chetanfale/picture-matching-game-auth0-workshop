@@ -177,44 +177,56 @@ Congratulations — you've built a secure integration between your app and Googl
 
 ## 💡 Conceptual: How an AI Agent Would Use Token Vault
 
-While we haven't built an AI agent in this workshop, the pattern you've just implemented is exactly how one would work. Here's the key idea:
+While we haven't built an AI agent in this workshop, the pattern you've just implemented is exactly how one would work. AI agents operate by calling **tools** — discrete functions that each do one specific thing. Each tool can declare exactly what access it needs, enforcing least privilege at the tool level.
 
 ### The Pattern
 
-An AI agent running on your backend would use Token Vault the same way your API routes do:
+Auth0's [`@auth0/ai`](https://github.com/auth0/ai) library provides a `withTokenVault()` wrapper that lets each tool declare its connection and scopes. Here's what a Google Drive tool would look like:
 
 ```typescript
-// Pseudocode: An AI agent analyzing user photos
-async function aiAgentTask(userId: string) {
-  // 1. Agent retrieves the user's Google token from Token Vault
-  //    (same method as your API routes!)
-  const { token } = await auth0.getAccessTokenForConnection({
-    connection: "google-oauth2",
-  });
+// Pseudocode: A "read Google Drive" tool for an AI agent
 
-  // 2. Agent lists the user's Drive photos
-  const photos = await listDriveImages(token, "Vacation Photos");
+// 1. Declare a Token Vault wrapper with the exact scopes this tool needs
+const withGoogleDriveRead = auth0AI.withTokenVault({
+  connection: "google-oauth2",
+  scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+  refreshToken: getRefreshToken,
+});
 
-  // 3. Agent analyzes the photos (using an AI model)
-  const analysis = await analyzePhotos(photos);
+// 2. Define the tool — wrapped with the Token Vault middleware
+const readGoogleDriveTool = withGoogleDriveRead(
+  tool({
+    description: "Read image files from the user's Google Drive folder",
+    parameters: z.object({
+      folderName: z.string().describe("Name of the Google Drive folder"),
+    }),
+    execute: async ({ folderName }) => {
+      // 3. Retrieve the scoped access token from Token Vault
+      const { accessToken } = await getAccessToken();
 
-  // 4. Agent returns results to the user
-  return { suggestedPairs: analysis.bestMatchingPairs };
-}
+      // 4. Use the token to call the Google Drive API
+      const images = await listDriveImages(accessToken, folderName);
+
+      return { images };
+    },
+  })
+);
 ```
+
+When the AI agent decides it needs to read a user's Google Drive, it calls `readGoogleDriveTool` — and Token Vault ensures it only gets a token scoped for `drive.readonly`. A different tool (say, one that sends emails) would declare its own connection and scopes separately.
 
 ### Why This Is Secure
 
 | Principle | How Token Vault Enforces It |
 |-----------|---------------------------|
-| **Least privilege** | Token only grants read-only Drive access |
+| **Least privilege** | Each tool declares its own scopes — `readGoogleDriveTool` can only get a `drive.readonly` token, nothing more |
 | **No credential exposure** | Agent never sees Google Client ID/Secret |
 | **User consent** | User explicitly granted access via OAuth consent screen |
 | **Revocable** | User can disconnect Google at any time from Settings |
 | **Auditable** | All token retrievals are logged in Auth0 |
 | **Time-limited** | Tokens expire and are auto-refreshed by Auth0 |
 
-The crucial insight: **the AI agent accesses the user's data through your backend, which retrieves tokens from Token Vault.** The agent never has direct access to credentials — it works through the same secure API layer you've already built.
+The crucial insight: **each tool declares exactly the scopes it needs, and Token Vault ensures the agent only gets a token with those permissions.** The agent never has direct access to credentials — it works through the same secure Token Vault layer you've already built.
 
 ---
 
