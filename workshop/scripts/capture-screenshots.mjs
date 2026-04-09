@@ -19,6 +19,7 @@
 
 import { chromium } from "@playwright/test";
 import { existsSync } from "node:fs";
+import { homedir } from "node:os";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
@@ -29,6 +30,17 @@ const ASSETS_DIR = resolve(__dirname, "..", "assets");
 const BASE_URL = "http://localhost:3000";
 
 const VIEWPORT = { width: 1280, height: 800 };
+
+function chromeUserDataDir() {
+  switch (process.platform) {
+    case "darwin":
+      return resolve(homedir(), "Library", "Application Support", "Google", "Chrome");
+    case "win32":
+      return resolve(process.env.LOCALAPPDATA, "Google", "Chrome", "User Data");
+    default:
+      return resolve(homedir(), ".config", "google-chrome");
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -70,10 +82,16 @@ async function screenshot(page, name, options = {}) {
 // ---------------------------------------------------------------------------
 
 async function login() {
-  console.log("\n🔐 Login mode — a browser will open for you to log in.\n");
+  console.log("\n🔐 Login mode — a browser will open using your Chrome profile.\n");
+  console.log("  ⚠️  Close Google Chrome before continuing (Playwright needs exclusive access).\n");
 
-  const browser = await chromium.launch({ headless: false, channel: "chrome" });
-  const context = await browser.newContext({ viewport: VIEWPORT });
+  await waitForEnter("  Press Enter when Chrome is closed → ");
+
+  const context = await chromium.launchPersistentContext(chromeUserDataDir(), {
+    headless: false,
+    channel: "chrome",
+    viewport: VIEWPORT,
+  });
   const page = await context.newPage();
 
   await page.goto(BASE_URL);
@@ -87,7 +105,7 @@ async function login() {
   await context.storageState({ path: AUTH_STATE_PATH });
   console.log(`\n  Session saved to ${AUTH_STATE_PATH}`);
 
-  await browser.close();
+  await context.close();
   console.log("  Done! Run the script again without --login to capture screenshots.\n");
 }
 
