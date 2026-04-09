@@ -123,7 +123,7 @@ Complete Module 03 CLI steps, then capture these Auth0 Dashboard screenshots man
 
 - [ ] **`03-dashboard-grant-types.png`**
   - **What:** Application grant types with Token Vault enabled
-  - **Navigate to:** Applications > Applications > [Your App] > Settings > Advanced Settings > Grant Types
+  - **Navigate to:** Applications > Applications > Auth0 Picture Matching Game Workshop App > Settings > Advanced Settings > Grant Types
   - **State:** After running the Step 3 CLI command
   - **Capture:** The Grant Types checkboxes with "Token Vault" checked
 
@@ -141,7 +141,7 @@ Complete Module 03 CLI steps, then capture these Auth0 Dashboard screenshots man
 
 - [ ] **`03-dashboard-mrrt-policy.png`**
   - **What:** Multi-Resource Refresh Token policy configuration
-  - **Navigate to:** Applications > Applications > [Your App] > Settings > Multi-Resource Refresh Token
+  - **Navigate to:** Applications > Applications > Auth0 Picture Matching Game Workshop App > Settings > Multi-Resource Refresh Token
   - **State:** After running the Step 6 CLI command
   - **Capture:** The MRRT policy section showing the Auth0 My Account API policy configured
 

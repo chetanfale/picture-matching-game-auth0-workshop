@@ -48,7 +48,7 @@ auth0 api PATCH /connections/$CONNECTION_ID \
     "options": {
       "client_id": "'"$GOOGLE_CLIENT_ID"'",
       "client_secret": "'"$GOOGLE_CLIENT_SECRET"'",
-      "scope": ["profile", "email", "https://www.googleapis.com/auth/drive.readonly"],
+      "drive_readonly": true,
       "access_type": "offline",
       "prompt": "consent",
       "connected_accounts": { "active": true }
@@ -64,7 +64,7 @@ You should see a JSON response with the updated connection details.
 |-------|-------|---------|
 | `options.client_id` | Workshop Google Client ID | Replaces Auth0's dev keys with dedicated credentials |
 | `options.client_secret` | Workshop Google Client Secret | Paired secret for the Google OAuth app |
-| `options.scope` | profile, email, drive.readonly | Adds Google Drive read access to the existing scopes |
+| `options.drive_readonly` | `true` | Enables the `https://www.googleapis.com/auth/drive.readonly` scope |
 | `options.access_type` | `"offline"` | Requests a refresh token for long-lived access |
 | `options.prompt` | `"consent"` | Always show consent screen (ensures refresh token is issued) |
 | `options.connected_accounts.active` | `true` | Enables Token Vault's connected accounts feature on this connection |
@@ -152,7 +152,7 @@ auth0 api PATCH /clients/$CLIENT_ID \
 <br>
 
 1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
-2. Navigate to **Applications > Applications > [Your App] > Settings**
+2. Navigate to **Applications > Applications > Auth0 Picture Matching Game Workshop App > Settings**
 3. Scroll to **Advanced Settings > Grant Types**
 4. Confirm **Token Vault** is checked
 
@@ -267,7 +267,7 @@ auth0 api PATCH /clients/$CLIENT_ID \
 <br>
 
 1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
-2. Navigate to **Applications > Applications > [Your App] > Settings**
+2. Navigate to **Applications > Applications > Auth0 Picture Matching Game Workshop App > Settings**
 3. Scroll to **Multi-Resource Refresh Token**
 4. Confirm the **Auth0 My Account** API policy is configured
 
