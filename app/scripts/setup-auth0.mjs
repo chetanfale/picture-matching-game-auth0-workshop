@@ -83,7 +83,7 @@ async function main() {
   console.log("\nStep 3: Configuring application URLs...");
   // These URLs are crucial for Auth0 to redirect back to your app securely
   runCommand(
-    `auth0 apps update ${clientId} --callbacks "${callbackUrl}" --logout-urls "${callbackUrl}" --web-origins "${callbackUrl}"`
+    `auth0 apps update ${clientId} --callbacks "${callbackUrl}/auth/callback" --logout-urls "${callbackUrl}" --web-origins "${callbackUrl}"`
   );
   console.log("✅ URLs configured successfully.");
 

@@ -81,7 +81,7 @@ async function main() {
   // 4. Configure URLs
   console.log("\nStep 3: Configuring application URLs...");
   runCommand(
-    `auth0 apps update ${clientId} --callbacks "${callbackUrl}" --logout-urls "${callbackUrl}" --web-origins "${callbackUrl}"`
+    `auth0 apps update ${clientId} --callbacks "${callbackUrl}/auth/callback" --logout-urls "${callbackUrl}" --web-origins "${callbackUrl}"`
   );
   console.log("✅ URLs configured successfully.");
 
