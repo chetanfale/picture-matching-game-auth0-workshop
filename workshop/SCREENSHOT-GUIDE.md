@@ -19,11 +19,15 @@ pnpm exec playwright install chromium
 
 ### Step 1: Save your session
 
-Start the app, then run the login command. A browser opens — log in via Auth0 and optionally connect Google Drive (needed for Module 05 screenshots). Press Enter in the terminal when done.
+Start the app and log in via your normal browser. Then export the session cookie:
 
 ```bash
 pnpm dev:app  # or pnpm dev:final
+# Log in at http://localhost:3000 in your browser
+# Open DevTools (F12) → Application → Cookies → http://localhost:3000
+# Copy the "appSession" cookie value, then run:
 node workshop/scripts/capture-screenshots.mjs --login
+# Paste the cookie value when prompted
 ```
 
 ### Step 2: Capture Module 01 screenshots

@@ -18,9 +18,7 @@
  */
 
 import { chromium } from "@playwright/test";
-import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
-import { homedir } from "node:os";
+import { existsSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
@@ -31,28 +29,6 @@ const ASSETS_DIR = resolve(__dirname, "..", "assets");
 const BASE_URL = "http://localhost:3000";
 
 const VIEWPORT = { width: 1280, height: 800 };
-
-function chromeUserDataDir() {
-  switch (process.platform) {
-    case "darwin":
-      return resolve(homedir(), "Library", "Application Support", "Google", "Chrome");
-    case "win32":
-      return resolve(process.env.LOCALAPPDATA, "Google", "Chrome", "User Data");
-    default:
-      return resolve(homedir(), ".config", "google-chrome");
-  }
-}
-
-function chromeExecutablePath() {
-  switch (process.platform) {
-    case "darwin":
-      return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-    case "win32":
-      return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-    default:
-      return "google-chrome";
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -94,37 +70,44 @@ async function screenshot(page, name, options = {}) {
 // ---------------------------------------------------------------------------
 
 async function login() {
-  console.log("\n🔐 Login mode — Chrome will open with your real profile.\n");
-  console.log("  ⚠️  Close Google Chrome before continuing.\n");
+  console.log("\n🔐 Login mode — save your browser session cookie.\n");
+  console.log("  1. Open your browser and go to " + BASE_URL);
+  console.log("  2. Log in via Auth0 (and optionally connect Google Drive for Module 05)");
+  console.log("  3. Open DevTools (F12) → Application → Cookies → " + BASE_URL);
+  console.log("  4. Copy the value of the 'appSession' cookie\n");
 
-  await waitForEnter("  Press Enter when Chrome is closed → ");
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  const cookie = await new Promise((resolve) => {
+    rl.question("  Paste appSession cookie value → ", (answer) => {
+      rl.close();
+      resolve(answer.trim());
+    });
+  });
 
-  // Spawn Chrome directly (not through Playwright) — no automation flags
-  const chrome = spawn(chromeExecutablePath(), [
-    "--remote-debugging-port=9222",
-    `--user-data-dir=${chromeUserDataDir()}`,
-    BASE_URL,
-  ], { stdio: "ignore" });
+  if (!cookie) {
+    console.error("\n  ❌ No cookie value provided.\n");
+    process.exit(1);
+  }
 
-  // Wait for Chrome to start and open the debugging port
-  await new Promise((r) => setTimeout(r, 3000));
+  const state = {
+    cookies: [
+      {
+        name: "appSession",
+        value: cookie,
+        domain: "localhost",
+        path: "/",
+        expires: -1,
+        httpOnly: true,
+        secure: false,
+        sameSite: "Lax",
+      },
+    ],
+    origins: [],
+  };
 
-  console.log("  Browser opened at", BASE_URL);
-  console.log(
-    "  Log in via Auth0, and optionally connect Google Drive for Module 05 screenshots."
-  );
-
-  await waitForEnter("\n  Press Enter when you're done → ");
-
-  // Connect via CDP to capture session state
-  const browser = await chromium.connectOverCDP("http://127.0.0.1:9222");
-  const context = browser.contexts()[0];
-  await context.storageState({ path: AUTH_STATE_PATH });
-  console.log(`\n  Session saved to ${AUTH_STATE_PATH}`);
-
-  await browser.close();
-  chrome.kill();
-  console.log("  Done! Run the script again without --login to capture screenshots.\n");
+  writeFileSync(AUTH_STATE_PATH, JSON.stringify(state, null, 2));
+  console.log(`\n  ✅ Session saved to ${AUTH_STATE_PATH}`);
+  console.log("  Run the script again without --login to capture screenshots.\n");
 }
 
 // ---------------------------------------------------------------------------
