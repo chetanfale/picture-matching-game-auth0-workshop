@@ -87,6 +87,23 @@ Step 2: Creating the 'Auth0 Picture Matching Game Workshop App' application...
 > **Note**
 > The Google Client ID and Secret are pre-provisioned via Codespaces secrets. You don't need to create a Google Cloud project — this is already handled for you.
 
+> **💡 Prepare Your Game Images**
+>
+> Now is a great time to upload images to Google Drive for later modules. This repository includes example card sets you can use:
+>
+> - **`card-sets/shonen-anime/`** — 8 chibi anime character images
+> - **`card-sets/corgis/`** — 9 cartoon corgi images
+>
+> To prepare:
+> 1. Download one of the card set folders from the Codespace file explorer
+> 2. Go to [Google Drive](https://drive.google.com) and create a new folder (e.g., "Game Photos")
+> 3. Upload the images into that folder
+> 4. Remember the folder name — you'll use it in Module 05
+>
+> You need at least **3 images** for Easy mode, **5 for Medium**, or **7 for Hard**. You can also use your own photos instead.
+>
+> _You can skip this for now and do it in Module 05, but preparing ahead saves time during testing._
+
 ---
 
 ## 🧑‍💻 Step 4: Start the Dev Server

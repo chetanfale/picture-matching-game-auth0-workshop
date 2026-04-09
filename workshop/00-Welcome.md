@@ -64,6 +64,10 @@ Before you begin, make sure you have:
 - [ ] **Auth0 Account** — A free tenant is all you need. [Sign up here](https://auth0.com/signup) if you don't have one.
 - [ ] **Google Account** — Any standard `@gmail.com` account for Google Drive access
 
+#### Prepare Your Game Images
+
+- [ ] **Images for Google Drive** — Later in the workshop, you'll load images from your Google Drive to use as card faces. You can use your own photos or one of the example card sets included in the [`card-sets/`](../card-sets/) folder. We'll tell you when to upload them.
+
 #### Recommended Knowledge
 
 - Basic understanding of JavaScript and React

@@ -146,7 +146,7 @@ After granting permission, you'll be redirected back to `/settings`. You should 
 ### Step 5: Load Your Photos
 
 1. Open [Google Drive](https://drive.google.com) in another tab
-2. Create a folder (e.g., "Game Photos") and add some images to it — at least 3 for Easy mode, 5 for Medium
+2. If you uploaded images earlier (from Module 01), find that folder. Otherwise, create a new folder and upload images now — you can use one of the example card sets from the [`card-sets/`](../card-sets/) folder in this repository (`shonen-anime/` or `corgis/`). You need at least 3 images for Easy mode, 5 for Medium.
 3. Back in the app, type the folder name exactly as it appears in Google Drive
 4. Click **Load**
 
