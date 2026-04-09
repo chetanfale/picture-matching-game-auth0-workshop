@@ -18,6 +18,7 @@
  */
 
 import { chromium } from "@playwright/test";
+import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { resolve, dirname } from "node:path";
@@ -39,6 +40,17 @@ function chromeUserDataDir() {
       return resolve(process.env.LOCALAPPDATA, "Google", "Chrome", "User Data");
     default:
       return resolve(homedir(), ".config", "google-chrome");
+  }
+}
+
+function chromeExecutablePath() {
+  switch (process.platform) {
+    case "darwin":
+      return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+    case "win32":
+      return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+    default:
+      return "google-chrome";
   }
 }
 
@@ -82,19 +94,21 @@ async function screenshot(page, name, options = {}) {
 // ---------------------------------------------------------------------------
 
 async function login() {
-  console.log("\n🔐 Login mode — a browser will open using your Chrome profile.\n");
-  console.log("  ⚠️  Close Google Chrome before continuing (Playwright needs exclusive access).\n");
+  console.log("\n🔐 Login mode — Chrome will open with your real profile.\n");
+  console.log("  ⚠️  Close Google Chrome before continuing.\n");
 
   await waitForEnter("  Press Enter when Chrome is closed → ");
 
-  const context = await chromium.launchPersistentContext(chromeUserDataDir(), {
-    headless: false,
-    channel: "chrome",
-    viewport: VIEWPORT,
-  });
-  const page = await context.newPage();
+  // Spawn Chrome directly (not through Playwright) — no automation flags
+  const chrome = spawn(chromeExecutablePath(), [
+    "--remote-debugging-port=9222",
+    `--user-data-dir=${chromeUserDataDir()}`,
+    BASE_URL,
+  ], { stdio: "ignore" });
 
-  await page.goto(BASE_URL);
+  // Wait for Chrome to start and open the debugging port
+  await new Promise((r) => setTimeout(r, 3000));
+
   console.log("  Browser opened at", BASE_URL);
   console.log(
     "  Log in via Auth0, and optionally connect Google Drive for Module 05 screenshots."
@@ -102,10 +116,14 @@ async function login() {
 
   await waitForEnter("\n  Press Enter when you're done → ");
 
+  // Connect via CDP to capture session state
+  const browser = await chromium.connectOverCDP("http://localhost:9222");
+  const context = browser.contexts()[0];
   await context.storageState({ path: AUTH_STATE_PATH });
   console.log(`\n  Session saved to ${AUTH_STATE_PATH}`);
 
-  await context.close();
+  await browser.close();
+  chrome.kill();
   console.log("  Done! Run the script again without --login to capture screenshots.\n");
 }
 
