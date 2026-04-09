@@ -94,55 +94,38 @@ Token Vault solves all of these problems by acting as a **secure intermediary** 
 
 ### Connecting a User's Google Account
 
-```
-┌──────────────────┐
-│     Browser      │
-│   (Your App)     │
-└────────┬─────────┘
-         │  1. User clicks "Connect Google Drive"
-         │  2. Browser navigates to /auth/connect?connection=google-oauth2
-         ▼
-┌──────────────────┐
-│      Auth0       │
-│  Connect Endpoint│
-└────────┬─────────┘
-         │  3. Redirects to Google's OAuth consent screen
-         ▼
-┌──────────────────┐
-│      Google      │
-│  Consent Screen  │  "This app wants to view your Google Drive files"
-└────────┬─────────┘
-         │  4. User clicks "Allow"
-         │  5. Google sends authorization code back to Auth0
-         ▼
-┌──────────────────┐
-│      Auth0       │
-│   Token Vault    │  6. Exchanges code for access + refresh tokens
-└──────────────────┘  7. Stores tokens encrypted
+```mermaid
+sequenceDiagram
+    participant Browser as Browser (Your App)
+    participant Auth0 as Auth0 Connect Endpoint
+    participant Google as Google Consent Screen
+    participant Vault as Auth0 Token Vault
+
+    Browser->>Auth0: 1. User clicks "Connect Google Drive"
+    Note over Browser,Auth0: /auth/connect?connection=google-oauth2
+    Auth0->>Google: 2. Redirect to consent screen
+    Note over Google: "This app wants to view<br/>your Google Drive files"
+    Google-->>Google: 3. User clicks "Allow"
+    Google->>Auth0: 4. Authorization code
+    Auth0->>Vault: 5. Exchange code for tokens
+    Vault-->>Vault: 6. Store tokens encrypted
 ```
 
 ### Using the Stored Token
 
-```
-┌──────────────────┐
-│     Browser      │  1. Requests /api/google-drive?folder=Photos
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│  Your API Route  │  2. auth0.getAccessTokenForConnection('google-oauth2')
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│  Token Vault     │  3. Returns the stored Google token
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│  Your API Route  │  4. Uses token in Authorization header
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│ Google Drive API │  5. Returns images from user's Drive
-└──────────────────┘
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant API as Your API Route
+    participant Vault as Token Vault
+    participant Google as Google Drive API
+
+    Browser->>API: 1. GET /api/google-drive?folder=Photos
+    API->>Vault: 2. getAccessTokenForConnection('google-oauth2')
+    Vault-->>API: 3. Returns stored Google token
+    API->>Google: 4. Uses token in Authorization header
+    Google-->>API: 5. Returns images from user's Drive
+    API-->>Browser: 6. Returns images (token never exposed)
 ```
 
 The key insight: **your frontend never sees the Google token.** It flows entirely through the backend.

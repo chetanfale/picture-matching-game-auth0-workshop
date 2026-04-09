@@ -49,7 +49,8 @@ Throughout this workshop, you followed security best practices:
 
 Want to see the finished version with all changes applied? The `final-app` uses the same Auth0 tenant and configuration as your workshop app, so you just need to copy your environment file over.
 
-> **Note:** Both apps run on port 3000. Stop your workshop app first if it's still running.
+> **Note**
+> Both apps run on port 3000. Stop your workshop app first if it's still running.
 
 ```bash
 # From the project root — copy your environment config to final-app

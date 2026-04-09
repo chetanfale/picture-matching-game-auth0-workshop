@@ -13,3 +13,6 @@ node_modules/
 
 # OS
 .DS_Store
+
+# Playwright screenshot auth state
+workshop/scripts/.auth-state.json

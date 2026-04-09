@@ -1,6 +1,6 @@
-# Workshop: Flip, Match, & Secure: Scoped Access for AI-Powered Games
+# Flip, Match, & Secure
 
-![Workshop Banner Image](workshop/assets/banner.png) <!-- Create a nice banner image later -->
+![Workshop Banner Image](workshop/assets/banner.png)
 
 Ever wonder how AI agents can securely use your personal data without getting access to your entire digital life? In this hands-on workshop, we'll build a fun, picture-matching game powered by an AI agent. You'll learn how to use Auth0's Token Vault to grant the agent secure, temporary access to a specific folder in Google Drive, allowing users to play the game with their own photos.
 
@@ -14,8 +14,6 @@ This workshop is designed to be run in GitHub Codespaces to provide a consistent
 2.  Be patient, the initial setup can take a few minutes. It's installing all the tools you'll need!
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=aydrian/picture-matching-game-auth0-workshop)
-
-<!-- Don't forget to replace the repo URL above with your actual repo path! -->
 
 ---
 

@@ -97,6 +97,8 @@ pnpm dev:app
 
 The app will start at `http://localhost:3000`. Open it in your browser (Codespaces will offer to open the forwarded port automatically).
 
+![App home page after login](assets/01-home-page.png)
+
 ---
 
 ## 🎮 Step 5: Explore the Game
@@ -114,6 +116,8 @@ Click **Log In** in the header. You'll be redirected to your Auth0 login page. C
 
 The game uses default animal images stored in `/public/cards/`.
 
+![Game board with default animal images](assets/01-game-board.png)
+
 ### Visit Settings
 
 Navigate to `/settings` (or click the gear icon). You'll see:
@@ -123,6 +127,8 @@ Navigate to `/settings` (or click the gear icon). You'll see:
 - A preview of the default game images
 
 This is where we'll focus our Token Vault work.
+
+![Settings page with Connect Google Drive placeholder](assets/01-settings-placeholder.png)
 
 ---
 

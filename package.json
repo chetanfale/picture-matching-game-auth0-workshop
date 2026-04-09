@@ -12,6 +12,7 @@
     "setup-auth0:emails": "pnpm --filter email-collector setup-auth0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.2.2",
     "prettier": "^3.0.0",
     "tailwindcss": "^4.2.2",

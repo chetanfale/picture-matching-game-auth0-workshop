@@ -91,6 +91,8 @@ You can also see the connection visually:
    - Scopes include `https://www.googleapis.com/auth/drive.readonly`
    - The connection is enabled for your app
 
+![Auth0 Dashboard — Authentication > Social showing Google connection](assets/03-dashboard-social-connections.png)
+
 ---
 
 ### ℹ️ Understanding the Scopes
@@ -147,11 +149,14 @@ auth0 api PATCH /api/v2/clients/$CLIENT_ID \
 
 <details>
 <summary>🖥️ Dashboard verification</summary>
+<br>
 
 1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
 2. Navigate to **Applications > Applications > [Your App] > Settings**
 3. Scroll to **Advanced Settings > Grant Types**
 4. Confirm **Token Vault** is checked
+
+![Auth0 Dashboard — Grant Types with Token Vault checked](assets/03-dashboard-grant-types.png)
 
 </details>
 
@@ -183,10 +188,13 @@ auth0 api POST /api/v2/resource-servers \
 
 <details>
 <summary>🖥️ Dashboard verification</summary>
+<br>
 
 1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
 2. Navigate to **Applications > APIs**
 3. Confirm **Auth0 My Account** exists with the connected accounts scopes
+
+![Auth0 Dashboard — APIs showing Auth0 My Account](assets/03-dashboard-my-account-api.png)
 
 </details>
 
@@ -219,10 +227,13 @@ auth0 api POST /api/v2/client-grants \
 
 <details>
 <summary>🖥️ Dashboard verification</summary>
+<br>
 
 1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
 2. Navigate to **Applications > APIs > Auth0 My Account > Application Access**
 3. Confirm your app is listed and authorized with the connected accounts scopes
+
+![Auth0 Dashboard — My Account API Application Access](assets/03-dashboard-client-grant.png)
 
 </details>
 
@@ -253,11 +264,14 @@ auth0 api PATCH /api/v2/clients/$CLIENT_ID \
 
 <details>
 <summary>🖥️ Dashboard verification</summary>
+<br>
 
 1. Go to [manage.auth0.com](https://manage.auth0.com/dashboard)
 2. Navigate to **Applications > Applications > [Your App] > Settings**
 3. Scroll to **Multi-Resource Refresh Token**
 4. Confirm the **Auth0 My Account** API policy is configured
+
+![Auth0 Dashboard — MRRT policy configuration](assets/03-dashboard-mrrt-policy.png)
 
 </details>
 

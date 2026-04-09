@@ -121,23 +121,18 @@ Open `app/app/api/google-drive/file/[id]/route.ts`. This route proxies individua
 
 This route is worth understanding. Here's what happens when the game displays an image:
 
-```
-Browser                     Your API Route              Google Drive
-  │                              │                          │
-  │  GET /api/google-drive/      │                          │
-  │      file/abc123             │                          │
-  │─────────────────────────────>│                          │
-  │                              │  GET /drive/v3/files/    │
-  │                              │      abc123?alt=media    │
-  │                              │  Authorization: Bearer   │
-  │                              │      [token from vault]  │
-  │                              │─────────────────────────>│
-  │                              │                          │
-  │                              │  <image bytes>           │
-  │                              │<─────────────────────────│
-  │  <image bytes>               │                          │
-  │  Content-Type: image/jpeg    │                          │
-  │<─────────────────────────────│                          │
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant API as Your API Route
+    participant Google as Google Drive
+
+    Browser->>API: GET /api/google-drive/file/abc123
+    API->>API: Retrieve token from Token Vault
+    API->>Google: GET /drive/v3/files/abc123?alt=media
+    Note over API,Google: Authorization: Bearer [token from vault]
+    Google-->>API: Image bytes
+    API-->>Browser: Image bytes (Content-Type: image/jpeg)
 ```
 
 **Why proxy instead of using direct Google Drive URLs?**

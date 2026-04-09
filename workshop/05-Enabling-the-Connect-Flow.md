@@ -119,12 +119,16 @@ pnpm dev:app
 
 You should now see an **active** "Connect Google Drive" button with the Google icon — replacing the placeholder!
 
+![Settings page with active Connect Google Drive button](assets/05-settings-connect-button.png)
+
 ### Step 3: Connect Your Google Account
 
 1. Click **Connect Google Drive**
 2. You'll be redirected to Google's consent screen
 3. You'll see something like: *"This app wants to: See and download all your Google Drive files"*
 4. Select your Google account and click **Continue** / **Allow**
+
+![Google OAuth consent screen](assets/05-google-consent-screen.png)
 
 > **Note**
 > If you see a warning about the app being unverified, click **Advanced** and then **Go to [app name] (unsafe)**. This is normal for development apps that haven't gone through Google's verification process.
@@ -137,6 +141,8 @@ After granting permission, you'll be redirected back to `/settings`. You should 
 - A **folder name input** field
 - A **Load** button
 
+![Settings page showing Google Drive connected state](assets/05-settings-connected.png)
+
 ### Step 5: Load Your Photos
 
 1. Open [Google Drive](https://drive.google.com) in another tab
@@ -146,11 +152,15 @@ After granting permission, you'll be redirected back to `/settings`. You should 
 
 You should see thumbnails of your images appear below the input!
 
+![Settings page with loaded Google Drive image thumbnails](assets/05-settings-images-loaded.png)
+
 ### Step 6: Play the Game
 
 1. Go back to the home page
 2. Select a difficulty and click **Start Game**
 3. Your Google Drive photos should appear as the card faces!
+
+![Game board with custom Google Drive photos](assets/05-game-custom-photos.png)
 
 Congratulations — you've built a secure integration between your app and Google Drive using Auth0 Token Vault!
 
