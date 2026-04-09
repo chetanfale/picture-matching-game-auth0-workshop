@@ -120,6 +120,13 @@ With the Google connection updated, we now need to configure several Auth0 resou
 > **Important**
 > Steps 3–6 below use shell variables (`$CLIENT_ID`, `$TENANT_DOMAIN`) defined in earlier steps. Run all of them in the **same terminal session** so the variables persist.
 
+> **Important**
+> These steps require additional Auth0 CLI permissions. Re-authenticate with the scopes needed for the commands below:
+>
+> ```bash
+> auth0 login --scopes create:client_grants
+> ```
+
 ### 🧑‍💻 Exercise: Step 3 — Enable the Token Vault Grant Type
 
 Your application needs the Token Vault grant type to exchange Auth0 tokens for external provider tokens. Without this, the SDK's `getAccessTokenForConnection()` call will fail.
@@ -167,17 +174,12 @@ auth0 api PATCH /clients/$CLIENT_ID \
 Token Vault uses Auth0's **My Account API** to manage connected accounts. This API provides endpoints for creating, reading, and deleting connected account links between your users and external providers.
 
 ```bash
-TENANT_DOMAIN=$(auth0 tenants domain)
+TENANT_DOMAIN=$(grep AUTH0_DOMAIN app/.env.local | cut -d"'" -f2)
 
 auth0 api POST /resource-servers \
   --data '{
     "identifier": "https://'"$TENANT_DOMAIN"'/me/",
     "name": "Auth0 My Account",
-    "scopes": [
-      { "value": "create:me:connected_accounts" },
-      { "value": "read:me:connected_accounts" },
-      { "value": "delete:me:connected_accounts" }
-    ],
     "allow_offline_access": true,
     "skip_consent_for_verifiable_first_party_clients": true
   }'
@@ -247,9 +249,11 @@ Finally, we need to configure a **Multi-Resource Refresh Token** policy. This al
 auth0 api PATCH /clients/$CLIENT_ID \
   --data '{
     "refresh_token": {
+      "rotation_type": "non-rotating",
+      "expiration_type": "non-expiring",
       "policies": [{
         "audience": "https://'"$TENANT_DOMAIN"'/me/",
-        "scopes": [
+        "scope": [
           "create:me:connected_accounts",
           "read:me:connected_accounts",
           "delete:me:connected_accounts"
