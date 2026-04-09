@@ -71,7 +71,7 @@ async function main() {
   // 3. Create the Application
   console.log(`\nStep 2: Creating the '${appName}' application...`);
   const appCreateOutput = runCommand(
-    `auth0 apps create "${appName}" --type regular --description "Completed workshop app for the picture matching game" --json --no-input`
+    `auth0 apps create --name "${appName}" --type regular --description "Completed workshop app for the picture matching game" --json --no-input`
   );
   const appData = JSON.parse(appCreateOutput);
   const clientId = appData.client_id;

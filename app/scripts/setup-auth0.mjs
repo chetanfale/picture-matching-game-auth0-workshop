@@ -72,7 +72,7 @@ async function main() {
   console.log(`\nStep 2: Creating the '${appName}' application...`);
   // Using --no-input to avoid interactive prompts in the CLI, --json for easy parsing
   const appCreateOutput = runCommand(
-    `auth0 apps create "${appName}" --type regular --description "Workshop app for the picture matching game" --json --no-input`
+    `auth0 apps create --name "${appName}" --type regular --description "Workshop app for the picture matching game" --json --no-input`
   );
   const appData = JSON.parse(appCreateOutput);
   const clientId = appData.client_id;
