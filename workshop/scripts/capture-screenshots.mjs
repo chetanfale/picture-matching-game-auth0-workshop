@@ -117,7 +117,7 @@ async function login() {
   await waitForEnter("\n  Press Enter when you're done → ");
 
   // Connect via CDP to capture session state
-  const browser = await chromium.connectOverCDP("http://localhost:9222");
+  const browser = await chromium.connectOverCDP("http://127.0.0.1:9222");
   const context = browser.contexts()[0];
   await context.storageState({ path: AUTH_STATE_PATH });
   console.log(`\n  Session saved to ${AUTH_STATE_PATH}`);
