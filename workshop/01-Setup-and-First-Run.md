@@ -27,7 +27,7 @@ If you haven't already, click the button below to open this repository in a new 
 > This workshop uses a shared Google OAuth app in testing mode. Your `@gmail.com` address must be added as an approved test user before you can connect Google Drive in Module 03.
 
 > **Note**
-> The initial setup takes 2–3 minutes. The devcontainer installs Node.js 18, pnpm, the Auth0 CLI, and all project dependencies automatically.
+> The initial setup takes 2–3 minutes. The devcontainer installs Node.js 22, pnpm, the Auth0 CLI, and all project dependencies automatically.
 
 Once your Codespace is ready, you'll need to open a terminal.
 
@@ -113,6 +113,9 @@ pnpm dev:app
 ```
 
 The app will start at `http://localhost:3000`. Open it in your browser (Codespaces will offer to open the forwarded port automatically).
+
+> **Important**
+> You must set the forwarded port to **Public** so Auth0 can redirect back to your Codespace URL. In the bottom panel, click the **Ports** tab (next to Terminal), right-click on port **3000**, and select **Port Visibility → Public**.
 
 ![App home page after login](assets/01-home-page.png)
 
