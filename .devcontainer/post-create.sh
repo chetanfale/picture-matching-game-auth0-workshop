@@ -3,6 +3,9 @@
 # Exit on error
 set -e
 
+echo "Installing Auth0 CLI..."
+curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b /usr/local/bin
+
 echo "Ensuring Corepack is enabled and pnpm is available..."
 corepack enable
 corepack prepare pnpm@latest --activate

@@ -2,10 +2,6 @@
   "name": "Auth0 Token Vault Workshop",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:18-bullseye",
 
-  "features": {
-    "ghcr.io/devcontainers-contrib/features/auth0-cli:1": {}
-  },
-
   "forwardPorts": [3000],
 
   "portsAttributes": {
