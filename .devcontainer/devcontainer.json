@@ -1,6 +1,6 @@
 {
   "name": "Auth0 Token Vault Workshop",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:18-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22-bookworm",
 
   "forwardPorts": [3000],
 
