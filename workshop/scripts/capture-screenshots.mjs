@@ -220,7 +220,9 @@ async function captureModule05(context, folderName) {
   }
 
   // 05-game-custom-photos.png — Game with custom photos
-  await page.goto(BASE_URL, { waitUntil: "networkidle" });
+  // Use client-side navigation to preserve Zustand in-memory state (custom images)
+  await page.click("text=Back to Home");
+  await page.waitForLoadState("networkidle");
   await page.click("text=Easy");
   await page.click("text=Play Now");
   // Wait for countdown + reveal
