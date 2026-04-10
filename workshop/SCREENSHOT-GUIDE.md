@@ -156,7 +156,7 @@ Run `node workshop/scripts/capture-screenshots.mjs --module 05 --folder "Game Ph
   - **Capture:** The "Connect Google Drive" button with the Google icon (blue/active, not the greyed-out placeholder)
   - **Notes:** Disconnect Google Drive first, then run `--module 05` without `--folder`
 
-- [ ] **`05-google-consent-screen.png`** _(manual)_
+- [x] **`05-google-consent-screen.png`** _(manual)_
   - **What:** Google's OAuth consent screen showing requested permissions
   - **Navigate to:** Click "Connect Google Drive" button
   - **Capture:** The consent screen showing "This app wants to: See and download all your Google Drive files" and the Allow/Cancel buttons
