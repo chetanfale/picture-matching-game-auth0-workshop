@@ -49,10 +49,10 @@ auth0 api PATCH /connections/$CONNECTION_ID \
       "client_id": "'"$GOOGLE_CLIENT_ID"'",
       "client_secret": "'"$GOOGLE_CLIENT_SECRET"'",
       "drive_readonly": true,
-      "access_type": "offline",
-      "prompt": "consent",
-      "connected_accounts": { "active": true }
-    }
+      "offline_access": true,
+      "prompt": "consent"
+    },
+    "connected_accounts": { "active": true }
   }'
 ```
 
@@ -65,9 +65,9 @@ You should see a JSON response with the updated connection details.
 | `options.client_id` | Workshop Google Client ID | Replaces Auth0's dev keys with dedicated credentials |
 | `options.client_secret` | Workshop Google Client Secret | Paired secret for the Google OAuth app |
 | `options.drive_readonly` | `true` | Enables the `https://www.googleapis.com/auth/drive.readonly` scope |
-| `options.access_type` | `"offline"` | Requests a refresh token for long-lived access |
+| `options.offline_access` | `true` | Requests a refresh token for long-lived access |
 | `options.prompt` | `"consent"` | Always show consent screen (ensures refresh token is issued) |
-| `options.connected_accounts.active` | `true` | Enables Token Vault's connected accounts feature on this connection |
+| `connected_accounts.active` | `true` | Enables Token Vault's connected accounts feature on this connection (top-level field, not inside `options`) |
 
 ### ✅ Verify the Connection
 
@@ -107,9 +107,9 @@ We request three scopes from Google:
 
 We intentionally use `drive.readonly` instead of the full `drive` scope. This follows the **principle of least privilege** — our game only needs to *read* images, not create, edit, or delete files.
 
-### ℹ️ Why `access_type: "offline"`?
+### ℹ️ Why `offline_access: true`?
 
-Google access tokens expire after about 1 hour. Setting `access_type` to `"offline"` tells Google to also issue a **refresh token**. Auth0 stores both in Token Vault and automatically uses the refresh token to get new access tokens when they expire — so users don't need to re-authorize.
+Google access tokens expire after about 1 hour. Setting `offline_access` to `true` tells Auth0 to request offline access from Google, which issues a **refresh token**. Auth0 stores both in Token Vault and automatically uses the refresh token to get new access tokens when they expire — so users don't need to re-authorize.
 
 ---
 
@@ -181,7 +181,10 @@ auth0 api POST /resource-servers \
     "identifier": "https://'"$TENANT_DOMAIN"'/me/",
     "name": "Auth0 My Account",
     "allow_offline_access": true,
-    "skip_consent_for_verifiable_first_party_clients": true
+    "skip_consent_for_verifiable_first_party_clients": true,
+    "subject_type_authorization": {
+      "user": { "policy": "require_client_grant" }
+    }
   }'
 ```
 
@@ -215,7 +218,8 @@ auth0 api POST /client-grants \
       "create:me:connected_accounts",
       "read:me:connected_accounts",
       "delete:me:connected_accounts"
-    ]
+    ],
+    "subject_type": "user"
   }'
 ```
 
@@ -393,13 +397,16 @@ Save the file and restart your dev server:
 pnpm dev:app
 ```
 
+> **Important**
+> If you were already logged in, **log out and log back in**. Your previous session was created with the old scopes (`openid profile email`). You need a new session that includes `offline_access` and the Google Drive scope — otherwise Token Vault won't be able to exchange tokens.
+
 The app should still work exactly the same — these configuration changes don't affect the UI yet. The real changes happen in the next module when we implement token retrieval.
 
 ---
 
 ## ✅ Checkpoint
 
-- [ ] Google social connection updated with credentials, scopes, and `connected_accounts.active` (verified via CLI or Dashboard)
+- [ ] Google social connection updated with credentials, scopes, and top-level `connected_accounts.active` (verified via CLI or Dashboard)
 - [ ] Token Vault grant type enabled on the application
 - [ ] My Account API activated with connected accounts scopes
 - [ ] Client grant created linking the app to My Account API
