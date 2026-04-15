@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 export const auth0 = new Auth0Client({
   enableConnectAccountEndpoint: true,
   authorizationParameters: {
-    // TODO (Module 03, Change 2): Add the offline_access and Google Drive scopes
-
     scope: "openid profile email offline_access https://www.googleapis.com/auth/drive.readonly",
   },
   async onCallback(err, ctx, session) {
