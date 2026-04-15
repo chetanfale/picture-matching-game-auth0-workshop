@@ -2,10 +2,11 @@ import { Auth0Client } from "@auth0/nextjs-auth0/server";
 import { NextResponse } from "next/server";
 
 export const auth0 = new Auth0Client({
-  // TODO (Module 03, Change 1): Enable the connect endpoint for Token Vault
+  enableConnectAccountEndpoint: true,
   authorizationParameters: {
     // TODO (Module 03, Change 2): Add the offline_access and Google Drive scopes
-    scope: "openid profile email",
+
+    scope: "openid profile email offline_access https://www.googleapis.com/auth/drive.readonly",
   },
   async onCallback(err, ctx, session) {
     const appBaseUrl = ctx.appBaseUrl ?? process.env.APP_BASE_URL;
